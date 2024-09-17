@@ -1,0 +1,77 @@
+{
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pizza Pequena",
+        "cost": 30,
+        "category": 1
+      },
+      {
+        "id": 2,
+        "name": "Pizza Media",
+        "cost": 50,
+        "category": 1
+      },
+      {
+        "id": 3,
+        "name": "Torta de Limão",
+        "cost": 30,
+        "category": 3
+      },
+      {
+        "id": 4,
+        "name": "Bolo de Chocolate",
+        "cost": 30,
+        "category": 3
+      },
+      {
+        "id": 5,
+        "name": "Suco de Laranja",
+        "cost": 15,
+        "category": 2
+      },
+      {
+        "id": 6,
+        "name": "Pizza Grande",
+        "cost": 70,
+        "category": 1
+      },
+      {
+        "id": 7,
+        "name": "Ribeye 800g",
+        "cost": 100,
+        "category": 1
+      },
+      {
+        "id": 8,
+        "name": "Suco de Abacaxi com Hortelã",
+        "cost": 15,
+        "category": 2
+      },
+      {
+        "id": 9,
+        "name": "Tequila",
+        "cost": 40,
+        "category": 2
+      },
+      {
+        "id": 10,
+        "name": "Torta de Queijo",
+        "cost": 30,
+        "category": 3
+      },
+      {
+        "id": 11,
+        "name": "Café Americano",
+        "cost": 20,
+        "category": 2
+      },
+      {
+        "id": 12,
+        "name": "Café Capuchino",
+        "cost": 40,
+        "category": 2
+      }
+    ],
+    "cliente": []
+  }
