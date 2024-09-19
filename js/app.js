@@ -31,14 +31,49 @@ function saveClient() {
         }
         return;
     }
-    
-    client = {
-        ...client, table, hour
-    }
+    //assign form data to client
+    client = { ...client, table, hour }
 
-    console.log(client);
-    
+    //close modal
+    const modalForm = document.querySelector("#formulario")
+    const modalBootstrap = bootstrap.Modal.getInstance(modalForm)
+    modalBootstrap.hide();
 
+    //show sections
+    showSections();
+
+    //get menu
+    getMenu()
 
 }
 
+function showSections(){
+    const hiddenSections = document.querySelectorAll('.d-none')
+    hiddenSections.forEach(section => section.classList.remove("d-none"))
+}
+
+function getMenu(){
+    const url = 'http://localhost:3000/menu'
+
+    fetch(url)
+        .then(response => response.json())
+        .then(result => showMenu(result))
+        .catch(error => console.log(error))
+}
+
+function showMenu(menu){
+    const content = document.querySelector(".conteudo")
+
+    menu.forEach( menuItem =>{
+        const row = document.createElement("div")
+        row.classList.add('row')
+
+        const name = document.createElement('div')
+        name.classList.add('col-md-4')
+        name.textContent = menuItem.name
+
+        row.appendChild(name)
+
+        content.appendChild(row)
+    })
+}
