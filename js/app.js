@@ -1,13 +1,19 @@
-let client = {
+let customer = {
     table: "",
     hour: "",
     orders: []
 }
 
-const btnSaveClient = document.querySelector("#save-client");
-btnSaveClient.addEventListener("click", saveClient)
+const categories = {
+    1: "Comida",
+    2: "Bebidas",
+    3: "Sobremesas"
+}
 
-function saveClient() {
+const btnSaveCustomer = document.querySelector("#save-customer");
+btnSaveCustomer.addEventListener("click", saveCustomer)
+
+function saveCustomer() {
 
     const table = document.querySelector("#table").value
     const hour = document.querySelector("#hour").value
@@ -31,8 +37,8 @@ function saveClient() {
         }
         return;
     }
-    //assign form data to client
-    client = { ...client, table, hour }
+    //assign form data to customer
+    customer = { ...customer, table, hour }
 
     //close modal
     const modalForm = document.querySelector("#formulario")
@@ -47,12 +53,12 @@ function saveClient() {
 
 }
 
-function showSections(){
+function showSections() {
     const hiddenSections = document.querySelectorAll('.d-none')
     hiddenSections.forEach(section => section.classList.remove("d-none"))
 }
 
-function getMenu(){
+function getMenu() {
     const url = 'http://localhost:3000/menu'
 
     fetch(url)
@@ -61,19 +67,63 @@ function getMenu(){
         .catch(error => console.log(error))
 }
 
-function showMenu(menu){
+function showMenu(menu) {
     const content = document.querySelector(".conteudo")
 
-    menu.forEach( menuItem =>{
+    menu.forEach(menuItem => {
         const row = document.createElement("div")
-        row.classList.add('row')
+        row.classList.add('row', 'py-3', 'border-top')
 
         const name = document.createElement('div')
         name.classList.add('col-md-4')
         name.textContent = menuItem.name
 
+        const price = document.createElement('div')
+        price.classList.add('col-md-3', 'fw-bold')
+        price.textContent = `R$ ${menuItem.cost}`
+
+        const category = document.createElement('div')
+        category.classList.add('col-md-3')
+        category.textContent = categories[menuItem.category]
+
+        const inputQuantity = document.createElement("INPUT")
+        inputQuantity.type = 'number';
+        inputQuantity.min = 0;
+        inputQuantity.value = 0;
+        inputQuantity.id = `item-${menuItem.id}`;
+        inputQuantity.classList.add('form-control')
+        //get menu item and quantity added
+        inputQuantity.onchange = function(){
+            const quantity = parseInt(inputQuantity.value)
+            createOrder({...menuItem, quantity})
+        }
+
+
+        const addInput = document.createElement("div")
+        addInput.classList.add('col-md-2')
+
+        addInput.appendChild(inputQuantity)
+
+
         row.appendChild(name)
+        row.appendChild(price)
+        row.appendChild(category)
+        row.appendChild(addInput)
 
         content.appendChild(row)
     })
+}
+
+function createOrder(items){
+    let {orders} = customer
+    //verify qtty > 0
+    if(items.quantity > 0){
+       customer.orders = [...orders, items]
+    }else{
+        console.log("no es mayor");
+    }
+
+    console.log(customer.orders);
+    
+    
 }
