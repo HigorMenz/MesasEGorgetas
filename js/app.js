@@ -118,7 +118,24 @@ function createOrder(items){
     let {orders} = customer
     //verify qtty > 0
     if(items.quantity > 0){
-       customer.orders = [...orders, items]
+
+        //verify if item exist
+       if(orders.some(item => item.id === items.id)){
+        //if item exist, update qtty
+        const updateOrder = orders.map(item =>{
+            if( item.id === items.id){
+                item.quantity = items.quantity
+            }
+            return item
+        })
+        //new array customer.orders
+        customer.orders = [...updateOrder]
+       }else{
+        //if item exist
+        customer.orders = [...orders, items]
+       }
+        
+       
     }else{
         console.log("no es mayor");
     }
