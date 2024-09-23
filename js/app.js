@@ -128,7 +128,7 @@ function createOrder(items){
             }
             return item
         })
-        //new array customer.orders
+        //new customer.orders array
         customer.orders = [...updateOrder]
        }else{
         //if item exist
@@ -137,7 +137,9 @@ function createOrder(items){
         
        
     }else{
-        console.log("no es mayor");
+        const result = orders.filter(item => item.id !== items.id)
+
+        customer.orders = [...orders]
     }
 
     console.log(customer.orders);
