@@ -68,7 +68,7 @@ function getMenu() {
 }
 
 function showMenu(menu) {
-    const content = document.querySelector(".conteudo")
+    const content = document.querySelector(".content")
 
     menu.forEach(menuItem => {
         const row = document.createElement("div")
@@ -142,7 +142,106 @@ function createOrder(items){
         customer.orders = [...orders]
     }
 
-    console.log(customer.orders);
+    cleanHtml()
+
+    // show customer orders
+    showOrders()
     
     
+}
+
+function showOrders(){
+
+
+    const content = document.querySelector("#summary .content")
+
+    const summaryOrder = document.createElement("div")
+    summaryOrder.classList.add("col-md-6", 'card', 'py-5', 'px-3', 'shadow')
+
+
+    const table = document .createElement("P")
+    table.textContent = 'Mesa: ';
+    table.classList.add("fw-bold")
+
+
+    const tableSpan = document.createElement("span")
+    tableSpan.textContent = customer.table
+    tableSpan.classList.add("fw-normal")
+
+    const hour = document .createElement("P")
+    hour.textContent = 'Hora: ';
+    hour.classList.add("fw-bold")
+
+
+    const hourSpan = document.createElement("span")
+    hourSpan.textContent = customer.hour
+    hourSpan.classList.add("fw-normal")
+
+
+    table.appendChild(tableSpan)
+    hour.appendChild(hourSpan)
+
+    const heading = document.createElement("h3")
+    heading.textContent="Items Pedidos"
+    heading.classList.add("my-4",'text-center')
+
+    const group = document.createElement("ul")
+    group.classList.add('list-group')
+
+    const {orders} = customer
+
+    orders.forEach(item => {
+        const {name, quantity, cost, id} = item
+
+        const list = document.createElement("li")
+        list.classList.add('list-group-item')
+
+        const nameIt = document.createElement("h4")
+        nameIt.classList.add("my-4")
+        nameIt.textContent= name
+
+        const quantityItem = document.createElement("p")
+        quantityItem.classList.add("fw-bold")
+        quantityItem.textContent = 'Quantidade: '
+
+        const quantityValue = document.createElement("span")
+        quantityValue.classList.add("fw-normal")
+        quantityValue.textContent = quantity
+
+        const priceItem = document.createElement("p")
+        priceItem.classList.add("fw-bold")
+        priceItem.textContent = 'Preço: '
+
+        const priceValue = document.createElement("span")
+        priceValue.classList.add("fw-normal")
+        priceValue.textContent = `$${cost}`
+
+        priceItem.appendChild(priceValue)
+        quantityItem.appendChild(quantityValue)
+        
+        list.appendChild(nameIt)
+        list.appendChild(quantityItem)
+        list.appendChild(priceItem)
+
+
+
+        group.appendChild(list)
+        
+    })
+
+
+    summaryOrder.appendChild(table)
+    summaryOrder.appendChild(hour)
+    summaryOrder.appendChild(heading)
+    summaryOrder.appendChild(group)
+
+    content.appendChild(summaryOrder)
+}
+
+function cleanHtml(){
+    const content = document.querySelector("#summary .content")
+
+    while (content.firstChild){
+        content.removeChild(content.firstChild)
+    }
 }
