@@ -93,9 +93,9 @@ function showMenu(menu) {
         inputQuantity.id = `item-${menuItem.id}`;
         inputQuantity.classList.add('form-control')
         //get menu item and quantity added
-        inputQuantity.onchange = function(){
+        inputQuantity.onchange = function () {
             const quantity = parseInt(inputQuantity.value)
-            createOrder({...menuItem, quantity})
+            createOrder({ ...menuItem, quantity })
         }
 
 
@@ -114,43 +114,43 @@ function showMenu(menu) {
     })
 }
 
-function createOrder(items){
-    let {orders} = customer
+function createOrder(items) {
+    let { orders } = customer
     //verify qtty > 0
-    if(items.quantity > 0){
+    if (items.quantity > 0) {
 
         //verify if item exist
-       if(orders.some(item => item.id === items.id)){
-        //if item exist, update qtty
-        const updateOrder = orders.map(item =>{
-            if( item.id === items.id){
-                item.quantity = items.quantity
-            }
-            return item
-        })
-        //new customer.orders array
-        customer.orders = [...updateOrder]
-       }else{
-        //if item exist
-        customer.orders = [...orders, items]
-       }
-        
-       
-    }else{
+        if (orders.some(item => item.id === items.id)) {
+            //if item exist, update qtty
+            const updateOrder = orders.map(item => {
+                if (item.id === items.id) {
+                    item.quantity = items.quantity
+                }
+                return item
+            })
+            //new customer.orders array
+            customer.orders = [...updateOrder]
+        } else {
+            //if item exist
+            customer.orders = [...orders, items]
+        }
+
+
+    } else {
         const result = orders.filter(item => item.id !== items.id)
 
-        customer.orders = [...orders]
+        customer.orders = [...result]
     }
 
     cleanHtml()
 
     // show customer orders
     showOrders()
-    
-    
+
+
 }
 
-function showOrders(){
+function showOrders() {
 
 
     const content = document.querySelector("#summary .content")
@@ -159,7 +159,7 @@ function showOrders(){
     summaryOrder.classList.add("col-md-6", 'card', 'py-5', 'px-3', 'shadow')
 
 
-    const table = document .createElement("P")
+    const table = document.createElement("P")
     table.textContent = 'Mesa: ';
     table.classList.add("fw-bold")
 
@@ -168,7 +168,7 @@ function showOrders(){
     tableSpan.textContent = customer.table
     tableSpan.classList.add("fw-normal")
 
-    const hour = document .createElement("P")
+    const hour = document.createElement("P")
     hour.textContent = 'Hora: ';
     hour.classList.add("fw-bold")
 
@@ -182,23 +182,23 @@ function showOrders(){
     hour.appendChild(hourSpan)
 
     const heading = document.createElement("h3")
-    heading.textContent="Items Pedidos"
-    heading.classList.add("my-4",'text-center')
+    heading.textContent = "Items Pedidos"
+    heading.classList.add("my-4", 'text-center')
 
     const group = document.createElement("ul")
     group.classList.add('list-group')
 
-    const {orders} = customer
+    const { orders } = customer
 
     orders.forEach(item => {
-        const {name, quantity, cost, id} = item
+        const { name, quantity, cost, id } = item
 
         const list = document.createElement("li")
         list.classList.add('list-group-item')
 
         const nameIt = document.createElement("h4")
         nameIt.classList.add("my-4")
-        nameIt.textContent= name
+        nameIt.textContent = name
 
         const quantityItem = document.createElement("p")
         quantityItem.classList.add("fw-bold")
@@ -214,19 +214,41 @@ function showOrders(){
 
         const priceValue = document.createElement("span")
         priceValue.classList.add("fw-normal")
-        priceValue.textContent = `$${cost}`
+        priceValue.textContent = `R$ ${cost}`
+
+
+
+        const totalItems = document.createElement("p")
+        totalItems.classList.add("fw-bold")
+        totalItems.textContent = 'Total: '
+
+        const totalValue = document.createElement("span")
+        totalValue.classList.add("fw-normal")
+        totalValue.textContent = itemsConsumed(cost, quantity)
+
+        //delete item
+        const btnDelete = document.createElement('button')
+        btnDelete.classList.add('btn', 'btn-danger')
+        btnDelete.textContent = 'Remover Item'
+        btnDelete.onclick = function () {
+            removeItem(id)
+        }
+
 
         priceItem.appendChild(priceValue)
         quantityItem.appendChild(quantityValue)
-        
+        totalItems.appendChild(totalValue)
+
         list.appendChild(nameIt)
         list.appendChild(quantityItem)
         list.appendChild(priceItem)
+        list.appendChild(totalItems)
+        list.appendChild(btnDelete)
 
 
 
         group.appendChild(list)
-        
+
     })
 
 
@@ -238,10 +260,49 @@ function showOrders(){
     content.appendChild(summaryOrder)
 }
 
-function cleanHtml(){
+function cleanHtml() {
     const content = document.querySelector("#summary .content")
 
-    while (content.firstChild){
+    while (content.firstChild) {
         content.removeChild(content.firstChild)
     }
+}
+
+function itemsConsumed(cost, quantity) {
+    return `R$ ${cost * quantity}`
+}
+
+function removeItem(id) {
+
+    const { orders } = customer
+    const result = orders.filter(item => item.id !== id)
+    customer.orders = [...result]
+
+    cleanHtml()
+
+    if(customer.orders.length){
+
+        showOrders()
+    }else{
+        emptyOrder()
+    }
+    
+
+    //the item was deleted so the quantity needs to be changed to 0
+    const removedItem = `#item-${id}`
+    const removedInput = document.querySelector(removedItem)
+    removedInput.value = 0
+   
+    
+}
+
+function emptyOrder(){
+    const content = document.querySelector('#summary .content')
+
+    const text = document.createElement('p')
+    text.classList.add('text-center')
+    text.textContent = ('Adicione items ao pedido')
+
+    content.appendChild(text)
+
 }
