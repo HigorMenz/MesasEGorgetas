@@ -144,7 +144,7 @@ function createOrder(items) {
 
     cleanHtml()
 
-    // show customer orders
+    // show customer orders.
     showOrders()
 
 
