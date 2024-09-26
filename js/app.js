@@ -156,7 +156,7 @@ function showOrders() {
     const content = document.querySelector("#summary .content")
 
     const summaryOrder = document.createElement("div")
-    summaryOrder.classList.add("col-md-6", 'card', 'py-5', 'px-3', 'shadow')
+    summaryOrder.classList.add("col-md-6", 'card', 'py-2', 'px-3', 'shadow')
 
 
     const table = document.createElement("P")
@@ -251,13 +251,16 @@ function showOrders() {
 
     })
 
-
+    summaryOrder.appendChild(heading)
     summaryOrder.appendChild(table)
     summaryOrder.appendChild(hour)
-    summaryOrder.appendChild(heading)
     summaryOrder.appendChild(group)
 
     content.appendChild(summaryOrder)
+
+    //show form tips
+
+    formTips()
 }
 
 function cleanHtml() {
@@ -304,5 +307,167 @@ function emptyOrder(){
     text.textContent = ('Adicione items ao pedido')
 
     content.appendChild(text)
+
+}
+
+
+function formTips(){
+    const content = document.querySelector('#summary .content')
+
+    const form = document.createElement("div")
+    form.classList.add('col-md-6' , 'form')
+
+    const divForm = document.createElement('div')
+    divForm.classList.add("card","py-2","px-3","shadow","gap-3")
+
+
+
+
+    const heading = document.createElement('h3')
+    heading.classList.add('my-4','text-center')
+    heading.textContent = 'Gorjeta'
+    
+    //tips 10%
+
+    const radio10 = document.createElement('input')
+    radio10.type = "radio"
+    radio10.name = 'gorjeta'
+    radio10.value = "10"
+    radio10.classList.add("form-check-input");
+    radio10.onclick = calcTips
+
+    const radio10Label = document.createElement("label")
+    radio10Label.textContent = "10%"
+    radio10.classList.add("form-check-label")
+
+    const radio10Div = document.createElement("div")
+    radio10Div.classList.add("form-check")
+
+
+    radio10Div.appendChild(radio10)
+    radio10Div.appendChild(radio10Label)
+
+    //tips 25%
+    const radio25 = document.createElement('input')
+    radio25.type = "radio"
+    radio25.name = 'gorjeta'
+    radio25.value = "25"
+    radio25.classList.add("form-check-input");
+    radio25.onclick = calcTips
+
+    const radio25Label = document.createElement("label")
+    radio25Label.textContent = "25%"
+    radio25.classList.add("form-check-label")
+
+    const radio25Div = document.createElement("div")
+    radio25Div.classList.add("form-check")
+
+
+    radio25Div.appendChild(radio25)
+    radio25Div.appendChild(radio25Label)
+
+      //tips 50%
+      const radio50 = document.createElement('input')
+      radio50.type = "radio"
+      radio50.name = 'gorjeta'
+      radio50.value = "50"
+      radio50.classList.add("form-check-input");
+      radio50.onclick = calcTips
+  
+      const radio50Label = document.createElement("label")
+      radio50Label.textContent = "50%"
+      radio50.classList.add("form-check-label")
+  
+      const radio50Div = document.createElement("div")
+      radio50Div.classList.add("form-check")
+  
+  
+      radio50Div.appendChild(radio50)
+      radio50Div.appendChild(radio50Label)
+  
+
+
+    divForm.appendChild(heading)
+    divForm.appendChild(radio10Div)
+    divForm.appendChild(radio25Div)
+    divForm.appendChild(radio50Div)
+   
+    form.appendChild(divForm)
+
+
+    content.appendChild(form)
+}
+
+function calcTips(){
+    const {orders} = customer
+    let subTotal = 0
+
+    orders.forEach( item => {
+        subTotal += item.quantity *  item.cost
+    })
+
+    const selectTips = document.querySelector('[name="gorjeta"]:checked').value
+   
+
+    const tips = ((subTotal * parseInt(selectTips))/100)
+    
+    const total = subTotal + tips
+
+    totalHtml(subTotal, total, tips)
+
+    
+}
+
+function totalHtml(subTotal, total, tips){
+  
+
+    const divTotal = document.createElement('div')
+    divTotal.classList.add('bill-total', 'my-5')
+    //items consumed
+    const subTotalP = document.createElement("p")
+    subTotalP.classList.add('fs-6','fw-bold', 'mt-3')
+    subTotalP.textContent = 'Valor dos items pedidos: '
+
+    const subTotalSpan = document.createElement('span')
+    subTotalSpan.classList.add('fw-normal')
+    subTotalSpan.textContent = `R$ ${subTotal}`
+
+    subTotalP.appendChild(subTotalSpan)
+
+    //tips
+    const tipsTotalP = document.createElement("p")
+    tipsTotalP.classList.add('fs-6','fw-bold', 'mt-3')
+    tipsTotalP.textContent = 'Valor da gorjeta: '
+
+    const tipsTotalSpan = document.createElement('span')
+    tipsTotalSpan.classList.add('fw-normal')
+    tipsTotalSpan.textContent = `R$ ${tips}`
+
+    tipsTotalP.appendChild(tipsTotalSpan)
+
+    //total
+    const totalValueP = document.createElement("p")
+    totalValueP.classList.add('fs-6','fw-bold', 'mt-3')
+    totalValueP.textContent = 'Valor total a pagar: '
+
+    const totalValueSpan = document.createElement('span')
+    totalValueSpan.classList.add('fw-normal')
+    totalValueSpan.textContent = `R$ ${total}`
+
+    totalValueP.appendChild(totalValueSpan)
+
+    //clear html if tips are changed
+    const clearTotal = document.querySelector('.bill-total')
+    if(clearTotal){
+        clearTotal.remove()
+    }
+
+    divTotal.appendChild(subTotalP)
+    divTotal.appendChild(tipsTotalP)
+    divTotal.appendChild(totalValueP)
+
+    const form = document.querySelector(".form > div")
+    form.appendChild(divTotal)
+
 
 }
